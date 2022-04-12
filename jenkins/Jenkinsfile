@@ -24,7 +24,7 @@ node {
          sh("""
             git config --global user.name "Joshualjh"
             git config --global user.email "aak1009@naver.com"
-            git checkout -B master
+            git checkout -B main
          """)
  
          
