@@ -29,7 +29,7 @@ node {
  
          
          // kustomize 사용하여 이미지 업데이트 
-         withCredentials([usernamePassword(credentialsId: 'github-signin', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {   
+        /* withCredentials([usernamePassword(credentialsId: 'github-signin', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {   
             sh("""
                #!/usr/bin/env bash
                git config --local credential.helper "!f() { echo username=\\$GIT_USERNAME; echo password=\\$GIT_PASSWORD; }; f"
@@ -38,7 +38,7 @@ node {
                git status
                git commit -m "update the image tag"
                git push origin HEAD:master
-            """)
+            """)*/
          } 
  
 
