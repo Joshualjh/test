@@ -22,8 +22,8 @@ node {
      stage('Deploy') { 
          // 사전 준비
          sh("""
-            git config --global user.name "Joshua"
-            git config --global user.email "aak10@naver.com"
+            git config --global user.name "Joshualjh"
+            git config --global user.email aak1009@naver.com
             git checkout -B main
          """)
  
