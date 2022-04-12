@@ -1,0 +1,50 @@
+node {   
+     // github 연동
+     stage('Clone repository') { 
+         checkout scm
+     }     
+     
+     // 도커 이미지 build
+     stage('Build image') { 
+         app = docker.build("708595888134.dkr.ecr.ap-northeast-2.amazonaws.com/test")
+     }
+     
+     // ecr repo 에 도커 이미지 push 
+     stage('Push image') {  
+         sh 'rm -f ~/.dockercfg ~/.docker/config.json || true'
+         
+         docker.withRegistry('https://708595888134.dkr.ecr.ap-northeast-2.amazonaws.com', 'ecr:ap-northeast-2:test') {
+             app.push("${env.BUILD_NUMBER}")
+         }         
+     }
+
+     // update 된 도커 이미지 태그를 깃헙에 push 
+     stage('Deploy') { 
+         // 사전 준비
+         sh("""
+            git config --global user.name "Joshualjh"
+            git config --global user.email "aak1009@naver.com"
+            git checkout -B master
+         """)
+ 
+         
+         // kustomize 사용하여 이미지 업데이트 
+         withCredentials([usernamePassword(credentialsId: 'github-signin', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {   
+            sh("""
+               #!/usr/bin/env bash
+               git config --local credential.helper "!f() { echo username=\\$GIT_USERNAME; echo password=\\$GIT_PASSWORD; }; f"
+               cd prod && kustomize edit set image 708595888134.dkr.ecr.ap-northeast-2.amazonaws.com/test:${BUILD_NUMBER}
+               git add kustomization.yaml
+               git status
+               git commit -m "update the image tag"
+               git push origin HEAD:master
+            """)
+         } 
+ 
+
+
+                      
+     }
+          
+
+}
