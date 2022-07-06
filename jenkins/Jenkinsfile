@@ -22,8 +22,8 @@ node {
      stage('Deploy') { 
          // 사전 준비
          sh("""
-            git config --global user.name "Joshualjh"
-            git config --global user.email aak1009@naver.com
+            git config --global user.name ""
+            git config --global user.email 
             git checkout -B main
          """)
  
@@ -33,7 +33,7 @@ node {
             sh("""
                #!/usr/bin/env bash
                git config --local credential.helper "!f() { echo username=\\$GIT_USERNAME; echo password=\\$GIT_PASSWORD; }; f"
-               cd prod && kustomize edit set image 708595888134.dkr.ecr.ap-northeast-2.amazonaws.com/test:${BUILD_NUMBER}
+               cd prod && kustomize edit set image .dkr.ecr.ap-northeast-2.amazonaws.com/test:${BUILD_NUMBER}
                git add kustomization.yaml
                git status
                git commit -m "update the image tag"
